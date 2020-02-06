@@ -95,3 +95,12 @@ sys_cps (void)
 {
   return cps();
 }
+
+int
+sys_shmgetat (void)
+{
+  int key, num;
+  if(argint(0, &key) < 0 || argint(1, &num) < 0)
+    return -1;
+  return (int)shmgetat(key,num);
+}

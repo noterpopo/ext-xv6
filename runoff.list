@@ -53,6 +53,9 @@ exec.c
 # pipes
 pipe.c
 
+# sharemem
+sharemem.c
+
 # string operations
 string.c
 

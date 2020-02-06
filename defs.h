@@ -9,6 +9,9 @@ struct spinlock;
 struct sleeplock;
 struct stat;
 struct superblock;
+// shm
+struct sharemem;
+
 
 // bio.c
 void            binit(void);
@@ -189,3 +192,7 @@ void            clearpteu(pde_t *pgdir, char *uva);
 
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))
+
+// sharemem.c
+void            sharememinit();
+void*           shmgetat(uint, uint);
