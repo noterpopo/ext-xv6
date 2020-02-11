@@ -88,6 +88,8 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+  p->shm = KERNBASE;
+  p->shmkeymask = 0;
 
   release(&ptable.lock);
 
@@ -196,6 +198,16 @@ fork(void)
     np->state = UNUSED;
     return -1;
   }
+  shmaddcount(curproc->shmkeymask);
+  np->shm = curproc->shm;
+  np->shmkeymask = curproc->shmkeymask;
+
+  for(i=0;i<8;++i){
+    if(shmkeyused(i,np->shmkeymask)){
+      np->shmva[i] = curproc->shmva[i];
+    }
+  }
+
   np->sz = curproc->sz;
   np->parent = curproc;
   *np->tf = *curproc->tf;
@@ -274,6 +286,7 @@ wait(void)
 {
   struct proc *p;
   int havekids, pid;
+  //int ptcount;
   struct proc *curproc = myproc();
   
   acquire(&ptable.lock);
@@ -289,6 +302,10 @@ wait(void)
         pid = p->pid;
         kfree(p->kstack);
         p->kstack = 0;
+        // TODO
+        shmrelease(p->pgdir, p->shm, p->shmkeymask); 
+        p->shm = KERNBASE;
+        p->shmkeymask = 0;
         freevm(p->pgdir);
         p->pid = 0;
         p->parent = 0;

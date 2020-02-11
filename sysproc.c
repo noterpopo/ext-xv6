@@ -104,3 +104,12 @@ sys_shmgetat (void)
     return -1;
   return (int)shmgetat(key,num);
 }
+
+int
+sys_shmrefcount(void)
+{
+  int key;
+  if(argint(0,&key)<0)
+    return -1;
+  return shmrefcount(key);
+}
