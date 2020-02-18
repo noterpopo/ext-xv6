@@ -11,6 +11,9 @@ struct stat;
 struct superblock;
 // shm
 struct sharemem;
+// mq
+struct mq;
+struct msg;
 
 
 
@@ -204,3 +207,11 @@ int             copyshm(pde_t*, uint, pde_t*);
 int             shmrelease(pde_t*, uint, uint);
 void            shmaddcount(uint);
 int             shmkeyused(uint, uint);
+
+// messagequeue.c
+void            mqinit();
+int             mqget(uint);
+int             msgsnd(uint, void*, int);
+int             msgrcv(uint, void*, int);
+void            releasemq(int);
+void            addmqcount(uint);

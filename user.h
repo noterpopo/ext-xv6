@@ -26,6 +26,9 @@ int uptime(void);
 int cps(void);
 void* shmgetat(uint, uint);
 int   shmrefcount(int);
+int   mqget(uint);
+int   msgsnd(uint, void*, int);
+int   msgrcv(uint, void*, int);
 // ulib.c
 int stat(const char*, struct stat*);
 char* strcpy(char*, const char*);

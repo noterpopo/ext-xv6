@@ -23,3 +23,6 @@
 #define SYS_cps    22
 #define SYS_shmgetat    23
 #define SYS_shmrefcount 24
+#define SYS_mqget  25
+#define SYS_msgsnd 26
+#define SYS_msgrcv 27

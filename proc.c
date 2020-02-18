@@ -91,6 +91,8 @@ found:
   p->shm = KERNBASE;
   p->shmkeymask = 0;
 
+  p->mqmask = 0;
+
   release(&ptable.lock);
 
   // Allocate kernel stack.
@@ -208,6 +210,10 @@ fork(void)
     }
   }
 
+  addmqcount(curproc->mqmask);
+  np->mqmask = curproc->mqmask;
+
+
   np->sz = curproc->sz;
   np->parent = curproc;
   *np->tf = *curproc->tf;
@@ -306,6 +312,8 @@ wait(void)
         shmrelease(p->pgdir, p->shm, p->shmkeymask); 
         p->shm = KERNBASE;
         p->shmkeymask = 0;
+        releasemq(p->mqmask);
+        p->mqmask = 0;
         freevm(p->pgdir);
         p->pid = 0;
         p->parent = 0;

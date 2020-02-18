@@ -106,6 +106,9 @@ extern int sys_uptime(void);
 extern int sys_cps(void);
 extern int sys_shmgetat(void);
 extern int sys_shmrefcount(void);
+extern int sys_mqget(void);
+extern int sys_msgsnd(void);
+extern int sys_msgrcv(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -132,6 +135,9 @@ static int (*syscalls[])(void) = {
 [SYS_cps]     sys_cps,
 [SYS_shmgetat]     sys_shmgetat,
 [SYS_shmrefcount]     sys_shmrefcount,
+[SYS_mqget]     sys_mqget,
+[SYS_msgsnd]     sys_msgsnd,
+[SYS_msgrcv]     sys_msgrcv,
 };
 
 void

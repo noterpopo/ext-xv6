@@ -105,6 +105,10 @@ exec(char *path, char **argv)
   freevm(oldpgdir);
   curproc->shm = KERNBASE;
   curproc->shmkeymask = 0;
+
+  releasemq(curproc->mqmask);
+  curproc->mqmask = 0;
+  
   return 0;
 
  bad:
