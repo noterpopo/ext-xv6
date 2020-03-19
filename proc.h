@@ -57,6 +57,8 @@ struct proc {
   uint mqmask;
 
   uint uid;
+
+  int  back;
 };
 
 // Process memory is laid out contiguously, low addresses first:

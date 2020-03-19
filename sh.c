@@ -49,7 +49,7 @@ struct backcmd {
   struct cmd *cmd;
 };
 
-int fork1(void);  // Fork but panics on failure.
+int fork1(int);  // Fork but panics on failure.
 void panic(char*);
 struct cmd *parsecmd(char*);
 
@@ -91,7 +91,7 @@ runcmd(struct cmd *cmd)
 
   case LIST:
     lcmd = (struct listcmd*)cmd;
-    if(fork1() == 0)
+    if(fork1(0) == 0)
       runcmd(lcmd->left);
     wait();
     runcmd(lcmd->right);
@@ -101,14 +101,14 @@ runcmd(struct cmd *cmd)
     pcmd = (struct pipecmd*)cmd;
     if(pipe(p) < 0)
       panic("pipe");
-    if(fork1() == 0){
+    if(fork1(0) == 0){
       close(1);
       dup(p[1]);
       close(p[0]);
       close(p[1]);
       runcmd(pcmd->left);
     }
-    if(fork1() == 0){
+    if(fork1(0) == 0){
       close(0);
       dup(p[0]);
       close(p[0]);
@@ -123,8 +123,9 @@ runcmd(struct cmd *cmd)
 
   case BACK:
     bcmd = (struct backcmd*)cmd;
-    if(fork1() == 0)
+    if(fork1(1) == 0){
       runcmd(bcmd->cmd);
+    }
     break;
   }
   exit();
@@ -192,7 +193,7 @@ main(void)
         goto shloop;
     }
     
-    if(fork1() == 0)
+    if(fork1(0) == 0)
       runcmd(parsecmd(buf));
     wait();
   }
@@ -207,11 +208,11 @@ panic(char *s)
 }
 
 int
-fork1(void)
+fork1(int back)
 {
   int pid;
 
-  pid = fork();
+  pid = fork(back);
   if(pid == -1)
     panic("fork");
   return pid;

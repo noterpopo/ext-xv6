@@ -95,6 +95,8 @@ found:
 
   p->uid = -1;
 
+  p->back = 0;
+
   release(&ptable.lock);
 
   // Allocate kernel stack.
@@ -184,7 +186,7 @@ growproc(int n)
 // Sets up stack to return as if from system call.
 // Caller must set state of returned proc to RUNNABLE.
 int
-fork(void)
+fork(int back)
 {
   int i, pid;
   struct proc *np;
@@ -220,6 +222,7 @@ fork(void)
   np->parent = curproc;
   *np->tf = *curproc->tf;
   np->uid = getcuruid();
+  np->back = back;
 
   // Clear %eax so that fork returns 0 in the child.
   np->tf->eax = 0;
@@ -323,6 +326,9 @@ wait(void)
         p->name[0] = 0;
         p->killed = 0;
         p->state = UNUSED;
+        if(p->back == 1){
+          continue;
+        }
         release(&ptable.lock);
         return pid;
       }
