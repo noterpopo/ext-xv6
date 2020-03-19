@@ -59,6 +59,9 @@ sharemem.c
 # mq
 messagequeue.c
 
+# multiuser
+multiuser.c
+
 # string operations
 string.c
 

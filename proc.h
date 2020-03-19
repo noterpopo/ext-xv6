@@ -55,6 +55,8 @@ struct proc {
   void* shmva[8];
 
   uint mqmask;
+
+  uint uid;
 };
 
 // Process memory is laid out contiguously, low addresses first:

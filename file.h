@@ -34,4 +34,5 @@ struct devsw {
 
 extern struct devsw devsw[];
 
-#define CONSOLE 1
+#define CONSOLE1 1
+#define CONSOLE2 2

@@ -145,3 +145,42 @@ sys_msgrcv(void)
   return msgrcv(mqid,msg,sz); 
 }
 
+int
+sys_login(void)
+{
+  char* username, *pwd;
+  if(argstr(0, &username) < 0 || argstr(1,&pwd)<0)
+    return -1;
+  return login(username,pwd);
+}
+
+int
+sys_logout(void)
+{
+  logout();
+  return 0;
+}
+
+int
+sys_getcuruid(void)
+{
+  return getcuruid();
+}
+
+int
+sys_getloginstate(void)
+{
+  return getloginstate();
+}
+
+int
+sys_getcurconsole(void)
+{
+  return getcurconsole();
+}
+
+void
+sys_changshell(void)
+{
+   changshell();
+}

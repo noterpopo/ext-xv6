@@ -18,11 +18,18 @@
 static void consputc(int);
 
 static int panicked = 0;
+static int curconsole = 1;
 
 static struct {
   struct spinlock lock;
   int locking;
 } cons;
+
+int
+getcurconsole(void)
+{
+  return curconsole;
+}
 
 static void
 printint(int xx, int base, int sign)
@@ -188,6 +195,17 @@ struct {
 
 #define C(x)  ((x)-'@')  // Control-x
 
+
+void
+changshell()
+{
+  curconsole = curconsole==1?2:1;
+  wakeup(&input.r);
+  wakeup(&input.w);
+}
+
+
+
 void
 consoleintr(int (*getc)(void))
 {
@@ -242,7 +260,7 @@ consoleread(struct inode *ip, char *dst, int n)
   target = n;
   acquire(&cons.lock);
   while(n > 0){
-    while(input.r == input.w){
+    while(input.r == input.w || ip->major != curconsole){
       if(myproc()->killed){
         release(&cons.lock);
         ilock(ip);
@@ -274,9 +292,11 @@ int
 consolewrite(struct inode *ip, char *buf, int n)
 {
   int i;
-
   iunlock(ip);
   acquire(&cons.lock);
+  if(ip->major != curconsole){
+    sleep(&input.w, &cons.lock);
+  }
   for(i = 0; i < n; i++)
     consputc(buf[i] & 0xff);
   release(&cons.lock);
@@ -290,8 +310,10 @@ consoleinit(void)
 {
   initlock(&cons.lock, "console");
 
-  devsw[CONSOLE].write = consolewrite;
-  devsw[CONSOLE].read = consoleread;
+  devsw[CONSOLE1].write = consolewrite;
+  devsw[CONSOLE1].read = consoleread;
+  devsw[CONSOLE2].write = consolewrite;
+  devsw[CONSOLE2].read = consoleread;
   cons.locking = 1;
 
   ioapicenable(IRQ_KBD, 0);

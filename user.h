@@ -29,6 +29,12 @@ int   shmrefcount(int);
 int   mqget(uint);
 int   msgsnd(uint, void*, int);
 int   msgrcv(uint, void*, int);
+int   login(char*, char*);
+int   getloginstate();
+int   getcuruid();
+void  logout();
+void  changshell();
+int  getcurconsole();
 // ulib.c
 int stat(const char*, struct stat*);
 char* strcpy(char*, const char*);

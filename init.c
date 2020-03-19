@@ -12,14 +12,27 @@ main(void)
 {
   int pid, wpid;
 
-  if(open("console", O_RDWR) < 0){
-    mknod("console", 1, 1);
-    open("console", O_RDWR);
+  if(open("console1", O_RDWR) < 0){
+    mknod("console1", 1, 1);
+    mknod("console2", 2, 2);
+    //open("console1", O_RDWR); //0
   }
-  dup(0);  // stdout
-  dup(0);  // stderr
+  // dup(0);  // stdout 1
+  // dup(0);  // stderr 2
 
   for(;;){
+    close(0);
+    close(1);
+    close(2);
+    if(getcurconsole()==1){
+      open("console1", O_RDWR); //0
+    }else
+    {
+      open("console2", O_RDWR); //0
+    }
+
+    dup(0);
+    dup(0);
     printf(1, "init: starting sh\n");
     pid = fork();
     if(pid < 0){
@@ -31,7 +44,8 @@ main(void)
       printf(1, "init: exec sh failed\n");
       exit();
     }
-    while((wpid=wait()) >= 0 && wpid != pid)
-      printf(1, "zombie!\n");
+    while((wpid=wait()) >= 0 && wpid != pid){
+      printf(1, "zombie : pid %d, wpid %d!\n",pid,wpid);
+    }
   }
 }

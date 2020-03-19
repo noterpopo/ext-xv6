@@ -148,22 +148,50 @@ main(void)
   int fd;
 
   // Ensure that three file descriptors are open.
-  while((fd = open("console", O_RDWR)) >= 0){
+  while((fd = open("console1", O_RDWR)) >= 0 || (fd = open("console2", O_RDWR)) >= 0){
     if(fd >= 3){
       close(fd);
       break;
     }
   }
+  char username[10];
+  char pwd[10];
+  shloop:
+  if(getloginstate() == -1){
+    do {
+      printf(1,"please input the name: ");
+      gets(username,10);
+      printf(1,"please input the password: ");
+      gets(pwd,10);
+    } while (login(username,pwd) != 0);
+  }
 
   // Read and run input commands.
-  while(getcmd(buf, sizeof(buf)) >= 0){
+  while( getloginstate() != -1 && getcmd(buf, sizeof(buf)) >= 0){
     if(buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' '){
       // Chdir must be called by the parent, not the child.
       buf[strlen(buf)-1] = 0;  // chop \n
       if(chdir(buf+3) < 0)
         printf(2, "cannot cd %s\n", buf+3);
       continue;
+    }else if (strcmp(buf,"chvc\n")==0)
+    {
+      close(0);
+        close(1);
+        close(2);
+        if(getcurconsole()==1){
+          open("console2", O_RDWR); //0
+        }else
+        {
+          open("console1", O_RDWR); //0
+        }
+
+        dup(0);
+        dup(0);
+        changshell();
+        goto shloop;
     }
+    
     if(fork1() == 0)
       runcmd(parsecmd(buf));
     wait();

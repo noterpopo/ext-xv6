@@ -12,7 +12,7 @@ struct {
   struct proc proc[NPROC];
 } ptable;
 
-static struct proc *initproc;
+struct proc *initproc;
 
 int nextpid = 1;
 extern void forkret(void);
@@ -92,6 +92,8 @@ found:
   p->shmkeymask = 0;
 
   p->mqmask = 0;
+
+  p->uid = -1;
 
   release(&ptable.lock);
 
@@ -217,6 +219,7 @@ fork(void)
   np->sz = curproc->sz;
   np->parent = curproc;
   *np->tf = *curproc->tf;
+  np->uid = getcuruid();
 
   // Clear %eax so that fork returns 0 in the child.
   np->tf->eax = 0;
@@ -569,14 +572,14 @@ cps()
   
   // Loop over process table looking for process with pid.
   acquire(&ptable.lock);
-  cprintf("name \t pid \t state \t \n");
+  cprintf("name \t pid \t state \t uid \t \n");
   for(p = ptable.proc;p < &ptable.proc[NPROC];p++){
     if (p->state == SLEEPING)
-      cprintf("%s \t %d \t SLEEPING \t \n ",p->name, p->pid);
+      cprintf("%s \t %d \t SLEEPING \t %d \t \n ",p->name, p->pid, p->uid);
     else if (p->state == RUNNING)
-      cprintf("%s \t %d \t RUNNING \t \n ",p->name, p->pid);
+      cprintf("%s \t %d \t RUNNING \t %d \t \n ",p->name, p->pid, p->uid);
     else if (p->state == RUNNABLE)
-      cprintf("%s \t %d \t RUNNABLE \t \n ",p->name, p->pid);
+      cprintf("%s \t %d \t RUNNABLE \t %d \t \n ",p->name, p->pid, p->uid);
   }
   release(&ptable.lock);
   

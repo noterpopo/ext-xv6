@@ -109,6 +109,13 @@ extern int sys_shmrefcount(void);
 extern int sys_mqget(void);
 extern int sys_msgsnd(void);
 extern int sys_msgrcv(void);
+extern int sys_login(void);
+extern int sys_logout(void);
+extern int sys_getcuruid(void);
+extern int sys_getloginstate(void);
+extern int sys_getcurconsole(void);
+extern int sys_changshell(void);
+
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -138,6 +145,12 @@ static int (*syscalls[])(void) = {
 [SYS_mqget]     sys_mqget,
 [SYS_msgsnd]     sys_msgsnd,
 [SYS_msgrcv]     sys_msgrcv,
+[SYS_login]    sys_login,
+[SYS_logout]    sys_logout,
+[SYS_getcuruid]    sys_getcuruid,
+[SYS_getloginstate]   sys_getloginstate,
+[SYS_getcurconsole]    sys_getcurconsole,
+[SYS_changshell]   sys_changshell
 };
 
 void

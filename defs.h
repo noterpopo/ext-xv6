@@ -28,6 +28,8 @@ void            consoleinit(void);
 void            cprintf(char*, ...);
 void            consoleintr(int(*)(void));
 void            panic(char*) __attribute__((noreturn));
+int             getcurconsole(void);
+void            changshell(void);
 
 // exec.c
 int             exec(char*, char**);
@@ -110,6 +112,7 @@ int             pipewrite(struct pipe*, char*, int);
 
 //PAGEBREAK: 16
 // proc.c
+extern struct proc *initproc;
 int             cpuid(void);
 void            exit(void);
 int             fork(void);
@@ -215,3 +218,9 @@ int             msgsnd(uint, void*, int);
 int             msgrcv(uint, void*, int);
 void            releasemq(int);
 void            addmqcount(uint);
+
+//multiuser.c
+int             login(char*, char*);
+int             getloginstate(void);
+int             getcuruid(void);
+void            logout(void);

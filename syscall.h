@@ -26,3 +26,9 @@
 #define SYS_mqget  25
 #define SYS_msgsnd 26
 #define SYS_msgrcv 27
+#define SYS_login 28
+#define SYS_logout 29
+#define SYS_getcuruid 30
+#define SYS_getloginstate 31
+#define SYS_getcurconsole 32
+#define SYS_changshell 33
