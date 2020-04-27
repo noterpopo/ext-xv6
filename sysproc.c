@@ -187,3 +187,9 @@ sys_changshell(void)
 {
    changshell();
 }
+
+uint
+sys_getticks(void)
+{
+  return ticks;
+}

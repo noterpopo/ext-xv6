@@ -115,6 +115,7 @@ extern int sys_getcuruid(void);
 extern int sys_getloginstate(void);
 extern int sys_getcurconsole(void);
 extern int sys_changshell(void);
+extern int sys_getticks(void);
 
 
 static int (*syscalls[])(void) = {
@@ -150,7 +151,8 @@ static int (*syscalls[])(void) = {
 [SYS_getcuruid]    sys_getcuruid,
 [SYS_getloginstate]   sys_getloginstate,
 [SYS_getcurconsole]    sys_getcurconsole,
-[SYS_changshell]   sys_changshell
+[SYS_changshell]   sys_changshell,
+[SYS_getticks]     sys_getticks
 };
 
 void

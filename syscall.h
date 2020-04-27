@@ -32,3 +32,4 @@
 #define SYS_getloginstate 31
 #define SYS_getcurconsole 32
 #define SYS_changshell 33
+#define SYS_getticks 34

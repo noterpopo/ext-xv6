@@ -35,6 +35,7 @@ int   getcuruid();
 void  logout();
 void  changshell();
 int  getcurconsole();
+uint getticks();
 // ulib.c
 int stat(const char*, struct stat*);
 char* strcpy(char*, const char*);
