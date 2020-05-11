@@ -24,7 +24,6 @@ struct user userlist[MAXUSERNUM] = {
 };
 
 int loginstate[2] = {-1,-1};
-int curuid = -1;
 
 char username[10];
 char pwd[10];
@@ -40,7 +39,6 @@ login(char *username, char *pwd)
         if(!strncmp(username,userlist[i].username,strlen(username))){
             if(!strncmp(pwd,userlist[i].password,strlen(pwd))){
                 loginstate[getcurconsole()-1] = i;
-                curuid = i;
                 myproc()->uid = i;
                 return 0;
             }
@@ -53,14 +51,13 @@ int
 getloginstate()
 {
     myproc()->uid = loginstate[getcurconsole()-1];
-    curuid = loginstate[getcurconsole()-1];;
     return loginstate[getcurconsole()-1];
 }
 
 int
 getcuruid()
 {
-    return curuid;
+    return myproc()->uid;
 }
 
 void
@@ -68,5 +65,4 @@ logout()
 {
     cprintf("logout : uid %d.\n",myproc()->uid);
     loginstate[getcurconsole()-1] = -1;
-    curuid = -1 ;
 }

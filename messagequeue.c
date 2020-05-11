@@ -138,9 +138,11 @@ msgsnd(uint mqid, void* msg, int sz)
             memmove(m -> dataaddr, data, sz);
             mqs[mqid].curbytes += (sz+16);
             //cprintf("type is %d,msg at %x, dataaddr at %s, datasz is %d.\n",m->type, m,m->dataaddr,m->dataszie);
-            wakeup(rqueue[rstart]);
-            rqueue[rstart] = 0;
-            rstart = (rstart +1) % NPROC;
+            while(wstart != wend){
+                wakeup(rqueue[rstart]);
+                rqueue[rstart] = 0;
+                rstart = (rstart +1) % NPROC;
+            }
             release(&mqlock);
             return 0;
         } else {
